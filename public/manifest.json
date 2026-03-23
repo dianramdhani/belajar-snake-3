@@ -1,0 +1,17 @@
+{
+  "name": "Snake AI Auto-Play",
+  "short_name": "Snake AI",
+  "description": "Watch AI algorithms play Snake automatically",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#030712",
+  "theme_color": "#030712",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

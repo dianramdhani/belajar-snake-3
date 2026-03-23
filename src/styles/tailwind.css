@@ -1,0 +1,41 @@
+@import "tailwindcss";
+
+@theme {
+  --color-dark-bg: #030712;
+  --color-grid-line: #1f2937;
+  --color-snake-head: #22d3ee;
+  --color-snake-body: #3b82f6;
+  --color-food: #ef4444;
+  --color-path: #facc15;
+  --color-path-head: #fbbf24;
+}
+
+@layer components {
+  .game-cell {
+    @apply transition-all duration-75;
+  }
+  .snake-head {
+    @apply rounded-lg shadow-lg ring-2 ring-cyan-300;
+  }
+  .food {
+    @apply rounded-full animate-pulse;
+  }
+  .btn-primary {
+    @apply px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .btn-secondary {
+    @apply px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white font-medium rounded-lg transition-colors duration-200;
+  }
+  .btn-success {
+    @apply px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors duration-200;
+  }
+  .btn-danger {
+    @apply px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-colors duration-200;
+  }
+  .card {
+    @apply bg-gray-900 border border-gray-800 rounded-xl p-4 shadow-lg;
+  }
+  .input-range {
+    @apply w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-purple-600;
+  }
+}
