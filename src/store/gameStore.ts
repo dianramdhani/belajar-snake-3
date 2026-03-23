@@ -51,7 +51,16 @@ export const useGameStore = create<GameState & {
             highScore: currentState.highScore, // Keep high score
           });
         },
-        reset: () => set({ ...getInitialState(get().gridSize) }),
+        reset: () => {
+          const currentState = get();
+          // Preserve user settings: speed, algorithm, highScore
+          set({
+            ...getInitialState(currentState.gridSize),
+            speed: currentState.speed,       // Keep current speed
+            algorithm: currentState.algorithm, // Keep current algorithm
+            highScore: currentState.highScore, // Keep high score
+          });
+        },
         setDirection: (direction) => set({ direction }),
         setSpeed: (speed) => set({ speed }),
         setGridSize: (gridSize) => set({
