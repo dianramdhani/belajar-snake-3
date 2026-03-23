@@ -1,73 +1,94 @@
-# React + TypeScript + Vite
+# 🐍 Snake AI Auto-Play
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Watch AI algorithms play Snake automatically with multiple pathfinding strategies!
 
-Currently, two official plugins are available:
+## 🚀 Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **4 AI Algorithms**: BFS, A*, Greedy BFS, Greedy A*
+- **Speed Control**: 10ms-2000ms per tick (up to 100 ticks/sec)
+- **Grid Sizes**: 10x10 to 30x30
+- **Real-time Stats**: FPS, AI compute time, memory usage
+- **Persistent Data**: High scores and settings saved locally
 
-## React Compiler
+## 🛠️ Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **React 19** / **TypeScript 5.8** / **Vite 6**
+- **Zustand 5** (state management)
+- **Tailwind CSS 4** (styling)
 
-## Expanding the ESLint configuration
+## 📦 Installation
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 🏃 Development
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run dev
 ```
+
+## 🏗️ Build
+
+```bash
+npm run build
+```
+
+## 🌐 Deploy to Vercel
+
+### Option 1: Vercel CLI
+
+```bash
+# Install Vercel CLI
+npm install -g vercel
+
+# Login to Vercel
+vercel login
+
+# Deploy
+vercel
+```
+
+### Option 2: Vercel Dashboard
+
+1. Go to [vercel.com](https://vercel.com)
+2. Click "Add New Project"
+3. Import your Git repository
+4. Vercel will auto-detect Vite settings
+5. Click "Deploy"
+
+### Option 3: GitHub Integration
+
+1. Push code to GitHub
+2. Go to [vercel.com/new](https://vercel.com/new)
+3. Connect your GitHub repository
+4. Deploy automatically on every push
+
+## 📊 AI Algorithms
+
+| Algorithm | Speed | Accuracy | Best For |
+|-----------|-------|----------|----------|
+| **BFS** | Medium | ⭐⭐⭐⭐⭐ | Shortest path guarantee |
+| **A*** | Medium | ⭐⭐⭐⭐⭐ | Balanced performance |
+| **Greedy BFS** | Fast | ⭐⭐⭐ | Speed over accuracy |
+| **Greedy A*** | Fast | ⭐⭐⭐⭐ | Good balance |
+
+## 🎮 Controls
+
+- **Start/Resume**: Begin or continue game
+- **Pause**: Pause current game
+- **Reset**: Reset game (keeps speed/algorithm settings)
+- **AI Algorithm**: Select pathfinding algorithm
+- **Game Speed**: Adjust tick rate (0-100%)
+- **Grid Size**: Change board size (10-30)
+
+## 📈 Performance Targets
+
+- **60 FPS** rendering
+- **<10ms** AI compute time
+- **<500kB** bundle size (gzipped)
+- **<200ms** INP (Interaction to Next Paint)
+
+## 📝 License
+
+MIT
