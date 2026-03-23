@@ -39,13 +39,16 @@ export const useGameStore = create<GameState & {
         pause: () => set({ isPaused: true }),
         resume: () => set({ isPaused: false }),
         restart: () => {
-          const currentGridSize = get().gridSize;
+          const currentState = get();
+          // Preserve user settings: speed, algorithm, gridSize, highScore
           set({
-            ...getInitialState(currentGridSize),
+            ...getInitialState(currentState.gridSize),
             isRunning: true,
             isPaused: false,
             gameOver: false,
-            highScore: get().highScore, // Keep high score
+            speed: currentState.speed,       // Keep current speed
+            algorithm: currentState.algorithm, // Keep current algorithm
+            highScore: currentState.highScore, // Keep high score
           });
         },
         reset: () => set({ ...getInitialState(get().gridSize) }),
@@ -53,7 +56,9 @@ export const useGameStore = create<GameState & {
         setSpeed: (speed) => set({ speed }),
         setGridSize: (gridSize) => set({
           ...getInitialState(gridSize),
-          highScore: get().highScore, // Keep high score
+          speed: get().speed,              // Keep current speed
+          algorithm: get().algorithm,       // Keep current algorithm
+          highScore: get().highScore,       // Keep high score
         }),
         setAlgorithm: (algorithm) => set({ algorithm }),
         updateGame: (snake, food, score, currentPath) => set({ snake, food, score, currentPath }),
