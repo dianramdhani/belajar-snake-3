@@ -2,24 +2,26 @@ import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 import type { GameState, Position, Direction, AIAlgorithm } from '../types/game';
 
-const initialState: GameState = {
-  snake: [{ x: 10, y: 10 }],
+const getInitialState = (gridSize: number = 20): GameState => ({
+  snake: [{ x: Math.floor(gridSize / 2), y: Math.floor(gridSize / 2) }],
   direction: 'RIGHT',
-  food: { x: 15, y: 15 },
+  food: { x: Math.floor(gridSize * 0.75), y: Math.floor(gridSize * 0.75) },
   score: 0,
   highScore: 0,
   isRunning: false,
   isPaused: false,
   gameOver: false,
   speed: 100,
-  gridSize: 20,
+  gridSize,
   algorithm: 'bfs',
   currentPath: null,
-};
+});
 
 export const useGameStore = create<GameState & {
   start: () => void;
   pause: () => void;
+  resume: () => void;
+  restart: () => void;
   reset: () => void;
   setDirection: (dir: Direction) => void;
   setSpeed: (speed: number) => void;
@@ -32,19 +34,26 @@ export const useGameStore = create<GameState & {
   devtools(
     persist(
       (set, get) => ({
-        ...initialState,
+        ...getInitialState(),
         start: () => set({ isRunning: true, isPaused: false, gameOver: false }),
         pause: () => set({ isPaused: true }),
         resume: () => set({ isPaused: false }),
-        reset: () => set({ ...initialState }),
+        restart: () => {
+          const currentGridSize = get().gridSize;
+          set({
+            ...getInitialState(currentGridSize),
+            isRunning: true,
+            isPaused: false,
+            gameOver: false,
+            highScore: get().highScore, // Keep high score
+          });
+        },
+        reset: () => set({ ...getInitialState(get().gridSize) }),
         setDirection: (direction) => set({ direction }),
         setSpeed: (speed) => set({ speed }),
-        setGridSize: (gridSize) => set({ 
-          gridSize,
-          snake: [{ x: Math.floor(gridSize / 2), y: Math.floor(gridSize / 2) }],
-          food: { x: Math.floor(gridSize * 0.75), y: Math.floor(gridSize * 0.75) },
-          score: 0,
-          currentPath: null,
+        setGridSize: (gridSize) => set({
+          ...getInitialState(gridSize),
+          highScore: get().highScore, // Keep high score
         }),
         setAlgorithm: (algorithm) => set({ algorithm }),
         updateGame: (snake, food, score, currentPath) => set({ snake, food, score, currentPath }),

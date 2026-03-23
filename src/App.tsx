@@ -27,6 +27,8 @@ function App() {
     algorithm,
     start,
     pause,
+    resume,
+    restart,
     reset,
     setDirection,
     updateGame,
@@ -168,12 +170,20 @@ function App() {
 
   // Handler functions
   const handleStart = useCallback(() => {
-    start();
-  }, [start]);
+    if (gameOver) {
+      restart();
+    } else {
+      start();
+    }
+  }, [gameOver, start, restart]);
 
   const handlePause = useCallback(() => {
-    pause();
-  }, [pause]);
+    if (isPaused) {
+      resume();
+    } else {
+      pause();
+    }
+  }, [isPaused, pause, resume]);
 
   const handleReset = useCallback(() => {
     reset();
