@@ -29,7 +29,7 @@ export function useGameLoop({
         return;
       }
 
-      let delta = Math.min(100, currentTime - lastTimeRef.current);
+      const delta = Math.min(100, currentTime - lastTimeRef.current);
       lastTimeRef.current = currentTime;
       accumulatorRef.current += delta;
 
@@ -48,7 +48,7 @@ export function useGameLoop({
 
       frameRef.current = requestAnimationFrame(gameLoop);
     },
-    [isActive, tickIntervalMs, onUpdate, onRender]
+    [isActive, tickIntervalMs, onUpdate, onRender, fixedTimestep]
   );
 
   useEffect(() => {

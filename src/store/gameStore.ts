@@ -15,6 +15,7 @@ const getInitialState = (gridSize: number = 20): GameState => ({
   gridSize,
   algorithm: 'bfs',
   currentPath: null,
+  bestWeights: null,
 });
 
 export const useGameStore = create<GameState & {
@@ -49,6 +50,7 @@ export const useGameStore = create<GameState & {
             speed: currentState.speed,       // Keep current speed
             algorithm: currentState.algorithm, // Keep current algorithm
             highScore: currentState.highScore, // Keep high score
+            bestWeights: currentState.bestWeights, // Keep trained NN weights
           });
         },
         reset: () => {
@@ -59,6 +61,7 @@ export const useGameStore = create<GameState & {
             speed: currentState.speed,       // Keep current speed
             algorithm: currentState.algorithm, // Keep current algorithm
             highScore: currentState.highScore, // Keep high score
+            bestWeights: currentState.bestWeights, // Keep trained NN weights
           });
         },
         setDirection: (direction) => set({ direction }),
@@ -68,6 +71,7 @@ export const useGameStore = create<GameState & {
           speed: get().speed,              // Keep current speed
           algorithm: get().algorithm,       // Keep current algorithm
           highScore: get().highScore,       // Keep high score
+          bestWeights: get().bestWeights,   // Keep trained NN weights
         }),
         setAlgorithm: (algorithm) => set({ algorithm }),
         updateGame: (snake, food, score, currentPath) => set({ snake, food, score, currentPath }),

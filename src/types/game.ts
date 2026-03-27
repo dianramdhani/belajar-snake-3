@@ -1,6 +1,11 @@
 export type Position = { x: number; y: number };
 export type Direction = 'UP' | 'DOWN' | 'LEFT' | 'RIGHT';
-export type AIAlgorithm = 'bfs' | 'aStar' | 'greedyBFS' | 'greedyAStar';
+export type AIAlgorithm = 'bfs' | 'aStar' | 'greedyBFS' | 'greedyAStar' | 'genetic';
+
+export interface NeuralNetworkWeights {
+  layers: number[][][]; // Array of hidden/output layers, containing array of neurons, containing array of weights
+  biases: number[][];   // Array of hidden/output layers, containing array of biases
+}
 
 export interface GameState {
   snake: Position[];
@@ -15,6 +20,7 @@ export interface GameState {
   gridSize: number; // e.g. 20x20
   algorithm: AIAlgorithm;
   currentPath: Position[] | null;
+  bestWeights: NeuralNetworkWeights | null;
 }
 
 export interface StatsState {
@@ -23,6 +29,7 @@ export interface StatsState {
   totalScore: number;
   avgScore: number;
   gamesPlayed: number;
+  bestWeights: NeuralNetworkWeights | null;
 }
 
 export interface PerformanceState {

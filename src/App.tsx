@@ -8,6 +8,7 @@ import { GameBoard } from './components/game/GameBoard';
 import { ControlPanel } from './components/controls/ControlPanel';
 import { StatsPanel } from './components/stats/StatsPanel';
 import { PerformancePanel } from './components/performance/PerformancePanel';
+import { TrainingDashboard } from './components/training/TrainingDashboard';
 import { getDirectionFromDelta, moveSnake, isValidDirectionChange } from './game/grid-utils';
 import { checkCollision, checkFoodCollision } from './game/collision';
 import { generateFood } from './game/food-generator';
@@ -218,6 +219,7 @@ function App() {
               onPause={handlePause}
               onReset={handleReset}
             />
+            {algorithm === 'genetic' && <TrainingDashboard />}
             <StatsPanel />
             <PerformancePanel />
           </div>

@@ -17,6 +17,7 @@ export const AISelector = ({
     { value: 'aStar', label: '⭐ A* (A-Star)' },
     { value: 'greedyBFS', label: '⚡ Greedy BFS' },
     { value: 'greedyAStar', label: '🚀 Greedy A*' },
+    { value: 'genetic', label: '🧠 Genetic Algorithm' },
   ];
 
   return (

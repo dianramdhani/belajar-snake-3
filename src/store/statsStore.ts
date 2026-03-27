@@ -13,6 +13,7 @@ export const useStatsStore = create<StatsState & {
       totalScore: 0,
       avgScore: 0,
       gamesPlayed: 0,
+      bestWeights: null,
       addGame: (score) => {
         const totalGames = get().totalGames + 1;
         const totalScore = get().totalScore + score;
@@ -26,6 +27,7 @@ export const useStatsStore = create<StatsState & {
         totalScore: 0,
         avgScore: 0,
         gamesPlayed: 0,
+        bestWeights: null,
       }),
     }),
     { name: 'snake-stats-storage' }

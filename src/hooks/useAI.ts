@@ -1,8 +1,11 @@
 import { useCallback } from 'react';
-import type { Position, AIAlgorithm } from '../types/game';
+import type { Position, AIAlgorithm, Direction } from '../types/game';
 import { findPath, getNextDirection } from '../ai/pathfinding';
 import { getObstacles } from '../game/grid-utils';
 import { usePerformanceStore } from '../store/performanceStore';
+import { useGameStore } from '../store/gameStore';
+import { NeuralNetwork } from '../ai/genetic/NeuralNetwork';
+import { getVision } from '../ai/genetic/vision';
 
 interface UseAIOptions {
   algorithm: AIAlgorithm;
@@ -24,8 +27,53 @@ export function useAI({
   gridSize,
 }: UseAIOptions): UseAIReturn {
   const updateAIComputeTime = usePerformanceStore((state) => state.updateAIComputeTime);
+  const bestWeights = useGameStore((state) => state.bestWeights);
+  const direction = useGameStore((state) => state.direction);
 
   const getNextMove = useCallback(() => {
+    const startTime = performance.now();
+
+    if (algorithm === 'genetic') {
+      if (!bestWeights) {
+        console.warn('No trained genetic model found. Using fallback survival moves.');
+        // Fallback to emergency mode if no weights loaded yet
+        return emergencyFallback(snake, gridSize);
+      }
+
+      const nn = new NeuralNetwork([24, 16, 16, 3]);
+      nn.loadWeights(bestWeights);
+
+      const vision = getVision(snake, food, direction, gridSize);
+      const output = nn.predict(vision);
+
+      // Output mapping: [FORWARD, RIGHT, LEFT]
+      let maxIdx = 0;
+      for (let i = 1; i < output.length; i++) {
+        if (output[i] > output[maxIdx]) {
+          maxIdx = i;
+        }
+      }
+
+      let newDir = direction;
+      if (maxIdx === 1) { // Turn Right
+        const rightTurns: Record<Direction, Direction> = { 'UP': 'RIGHT', 'RIGHT': 'DOWN', 'DOWN': 'LEFT', 'LEFT': 'UP' };
+        newDir = rightTurns[direction];
+      } else if (maxIdx === 2) { // Turn Left
+        const leftTurns: Record<Direction, Direction> = { 'UP': 'LEFT', 'LEFT': 'DOWN', 'DOWN': 'RIGHT', 'RIGHT': 'UP' };
+        newDir = leftTurns[direction];
+      }
+
+      const delta = {
+        'UP': { x: 0, y: -1 },
+        'DOWN': { x: 0, y: 1 },
+        'LEFT': { x: -1, y: 0 },
+        'RIGHT': { x: 1, y: 0 },
+      }[newDir];
+
+      updateAIComputeTime(performance.now() - startTime);
+      return delta;
+    }
+
     const obstacles = getObstacles(snake);
 
     const result = findPath(algorithm, {
@@ -52,36 +100,16 @@ export function useAI({
       }
 
       // Emergency mode - just pick any valid move
-      const head = snake[0];
-      const moves: Position[] = [
-        { x: 0, y: -1 }, // UP
-        { x: 0, y: 1 },  // DOWN
-        { x: -1, y: 0 }, // LEFT
-        { x: 1, y: 0 },  // RIGHT
-      ];
-
-      for (const move of moves) {
-        const newHead = { x: head.x + move.x, y: head.y + move.y };
-        const isValid =
-          newHead.x >= 0 &&
-          newHead.x < gridSize &&
-          newHead.y >= 0 &&
-          newHead.y < gridSize &&
-          !snake.some((s) => s.x === newHead.x && s.y === newHead.y);
-
-        if (isValid) {
-          return move;
-        }
-      }
-
-      return null;
+      return emergencyFallback(snake, gridSize);
     }
 
     return getNextDirection(snake, result.path);
-  }, [algorithm, snake, food, gridSize, updateAIComputeTime]);
+  }, [algorithm, snake, food, gridSize, updateAIComputeTime, bestWeights, direction]);
 
   // Get current path for visualization
   const currentPath = useCallback((): Position[] | null => {
+    if (algorithm === 'genetic') return null; // Genetic doesn't produce paths
+
     const obstacles = getObstacles(snake);
     const result = findPath(algorithm, {
       snake,
@@ -100,4 +128,31 @@ export function useAI({
     currentPath: currentPath(),
     computeTime,
   };
+}
+
+// Extracted emergency fallback logic
+function emergencyFallback(snake: Position[], gridSize: number): Position | null {
+  const head = snake[0];
+  const moves: Position[] = [
+    { x: 0, y: -1 }, // UP
+    { x: 0, y: 1 },  // DOWN
+    { x: -1, y: 0 }, // LEFT
+    { x: 1, y: 0 },  // RIGHT
+  ];
+
+  for (const move of moves) {
+    const newHead = { x: head.x + move.x, y: head.y + move.y };
+    const isValid =
+      newHead.x >= 0 &&
+      newHead.x < gridSize &&
+      newHead.y >= 0 &&
+      newHead.y < gridSize &&
+      !snake.some((s) => s.x === newHead.x && s.y === newHead.y);
+
+    if (isValid) {
+      return move;
+    }
+  }
+
+  return null;
 }

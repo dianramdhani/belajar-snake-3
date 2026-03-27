@@ -20,9 +20,9 @@ export const usePerformanceStore = create<PerformanceState & {
     updateFPS: (fps) => set({ fps }),
     updateAIComputeTime: (aiComputeTime) => set({ aiComputeTime }),
     updateMemoryUsage: () => {
-      // @ts-ignore - performance.memory is Chrome-specific
+      // @ts-expect-error - performance.memory is Chrome-specific
       if (typeof performance !== 'undefined' && performance.memory) {
-        // @ts-ignore
+        // @ts-expect-error - performance.memory is Chrome-specific
         set({ memoryUsage: performance.memory.usedJSHeapSize / 1048576 });
       }
     },
