@@ -28,6 +28,7 @@ export const useGameStore = create<GameState & {
   setSpeed: (speed: number) => void;
   setGridSize: (size: number) => void;
   setAlgorithm: (algo: AIAlgorithm) => void;
+  setBestWeights: (weights: GameState['bestWeights']) => void;
   updateGame: (newSnake: Position[], newFood: Position, newScore: number, newPath: Position[] | null) => void;
   setGameOver: () => void;
   setHighScore: (score: number) => void;
@@ -74,6 +75,7 @@ export const useGameStore = create<GameState & {
           bestWeights: get().bestWeights,   // Keep trained NN weights
         }),
         setAlgorithm: (algorithm) => set({ algorithm }),
+        setBestWeights: (bestWeights) => set({ bestWeights }),
         updateGame: (snake, food, score, currentPath) => set({ snake, food, score, currentPath }),
         setGameOver: () => set({ gameOver: true, isRunning: false }),
         setHighScore: (score) => set({ highScore: Math.max(get().highScore, score) }),

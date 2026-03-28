@@ -6,6 +6,7 @@ import { usePerformanceStore } from '../store/performanceStore';
 import { useGameStore } from '../store/gameStore';
 import { NeuralNetwork } from '../ai/genetic/NeuralNetwork';
 import { getVision } from '../ai/genetic/vision';
+import { getBestModel } from '../ai/genetic/modelManager';
 
 interface UseAIOptions {
   algorithm: AIAlgorithm;
@@ -29,8 +30,23 @@ export function useAI({
   const updateAIComputeTime = usePerformanceStore((state) => state.updateAIComputeTime);
   const bestWeights = useGameStore((state) => state.bestWeights);
   const direction = useGameStore((state) => state.direction);
+  const setBestWeights = useGameStore((state) => state.setBestWeights);
+
+  // Auto-load model from public folder if no weights loaded yet
+  const loadModelIfNeeded = useCallback(async () => {
+    if (!bestWeights && algorithm === 'genetic') {
+      const modelData = await getBestModel();
+      if (modelData) {
+        setBestWeights(modelData.weights);
+        console.log('Auto-loaded genetic model from storage');
+      }
+    }
+  }, [bestWeights, algorithm, setBestWeights]);
 
   const getNextMove = useCallback(() => {
+    // Try to load model if needed
+    loadModelIfNeeded();
+
     const startTime = performance.now();
 
     if (algorithm === 'genetic') {
